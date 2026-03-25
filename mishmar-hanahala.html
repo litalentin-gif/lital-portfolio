@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>משמר הנחלה — טופס שיבוץ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <style>
+    /* ─── CONFIG: edit these colors if branding changes ─── */
+    :root {
+      --parchment:     #f5eedc;
+      --parchment-dark:#ede3c8;
+      --brown:         #5c3d1e;
+      --brown-dark:    #3a2210;
+      --gold:          #b8860b;
+      --gold-light:    #d4a820;
+      --ink:           #2b1a08;
+      --muted:         #7a6040;
+      --border:        #c9a96e;
+      --success:       #4a7c59;
+      --error:         #8b2020;
+      --radius:        10px;
+      --shadow:        0 4px 20px rgba(92,61,30,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background-color: var(--parchment);
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.7;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse at 10% 0%, rgba(184,134,11,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 90% 100%, rgba(92,61,30,0.06) 0%, transparent 60%);
+    }
+
+    /* ─── HEADER ─── */
+    .site-header {
+      background: var(--brown-dark);
+      padding: 28px 24px 20px;
+      text-align: center;
+      border-bottom: 4px solid var(--gold);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    .site-header img {
+      max-height: 120px;
+      width: auto;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+    }
+    .site-header h1 {
+      font-family: 'Frank Ruhl Libre', serif;
+      color: var(--parchment);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      margin-top: 14px;
+      letter-spacing: 1px;
+    }
+    .site-header .subtitle {
+      color: var(--gold-light);
+      font-size: 1rem;
+      font-weight: 400;
+      margin-top: 4px;
+    }
+
+    /* ─── LAYOUT ─── */
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ─── SECTION TITLES ─── */
+    .section-title {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: clamp(1.3rem, 3vw, 1.7rem);
+      font-weight: 700;
+      color: var(--brown-dark);
+      border-bottom: 3px solid var(--gold);
+      padding-bottom: 8px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title .icon { font-size: 1.4rem; }
+
+    /* ─── FAQ ─── */
+    .faq-section { margin-bottom: 52px; }
+
+    .faq-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(92,61,30,0.07);
+      transition: box-shadow 0.2s;
+    }
+    .faq-item:hover { box-shadow: var(--shadow); }
+
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 18px 20px;
+      text-align: right;
+      font-family: 'Heebo', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--brown);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s;
+    }
+    .faq-question:hover { background: var(--parchment-dark); }
+    .faq-arrow {
+      flex-shrink: 0;
+      font-size: 0.8rem;
+      color: var(--gold);
+      transition: transform 0.3s;
+    }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+      padding: 0 20px;
+      font-size: 1rem;
+      color: var(--ink);
+      line-height: 1.8;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 400px;
+      padding: 0 20px 18px;
+    }
+    .faq-answer strong { color: var(--brown); }
+
+    /* ─── FORM ─── */
+    .form-section {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .quarter-badge {
+      display: inline-block;
+      background: var(--brown-dark);
+      color: var(--gold-light);
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 28px;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 560px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-section { padding: 24px 18px; }
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--brown-dark);
+      margin-bottom: 8px;
+    }
+    label .required { color: var(--gold); margin-right: 2px; }
+    label .hint {
+      display: block;
+      font-weight: 400;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      font-family: 'Heebo', sans-serif;
+      font-size: 1rem;
+      color: var(--ink);
+      background: var(--parchment);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      direction: rtl;
+    }
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(184,134,11,0.15);
+      background: white;
+    }
+    textarea { resize: vertical; min-height: 90px; }
+
+    /* ─── RADIO BUTTONS ─── */
+    .radio-group, .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .radio-option, .checkbox-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-size: 1rem;
+      color: var(--ink);
+      user-select: none;
+    }
+    .radio-option:hover, .checkbox-option:hover {
+      border-color: var(--gold);
+      background: var(--parchment-dark);
+    }
+    .radio-option input, .checkbox-option input {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+    }
+    .radio-option.selected, .checkbox-option.selected {
+      border-color: var(--gold);
+      background: #fdf8ec;
+    }
+
+    /* ─── DAYS GRID ─── */
+    .days-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+    }
+    .day-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-size: 0.95rem;
+      color: var(--ink);
+      user-select: none;
+    }
+    .day-chip:hover { border-color: var(--gold); background: var(--parchment-dark); }
+    .day-chip input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--gold); flex-shrink: 0; }
+    .day-chip.selected { border-color: var(--gold); background: #fdf8ec; font-weight: 600; }
+
+    /* ─── DATE RANGE PICKER ─── */
+    .date-range-section {
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: var(--parchment);
+    }
+    .date-range-section.available {
+      border-color: #4a7c59;
+      background: #f0f8f2;
+    }
+    .date-range-section.unavailable {
+      border-color: #8b2020;
+      background: #fdf2f2;
+    }
+    .date-range-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .date-range-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+    }
+    .available .date-range-item { border-color: #b6d9c2; }
+    .unavailable .date-range-item { border-color: #f5b8b8; }
+    .date-range-item .range-label { color: var(--brown); font-weight: 500; }
+    .remove-range {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--error);
+      font-size: 1.1rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .remove-range:hover { background: #fde8e8; }
+
+    .date-picker-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    .date-picker-row .fp-wrap { flex: 1; min-width: 140px; }
+    .date-picker-row label { margin-bottom: 6px; font-weight: 500; font-size: 0.9rem; }
+
+    /* ─── BUTTONS ─── */
+    .btn-add-range {
+      margin-top: 12px;
+      background: none;
+      border: 2px dashed var(--gold);
+      color: var(--brown);
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-add-range:hover { background: #fdf8ec; color: var(--brown-dark); }
+
+    .btn-submit {
+      display: block;
+      width: 100%;
+      margin-top: 36px;
+      padding: 18px;
+      background: var(--brown-dark);
+      color: var(--parchment);
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 16px rgba(58,34,16,0.3);
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    }
+    .btn-submit:hover {
+      background: var(--brown);
+      box-shadow: 0 6px 20px rgba(58,34,16,0.35);
+    }
+    .btn-submit:active { transform: scale(0.99); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    /* ─── MESSAGES ─── */
+    .msg {
+      display: none;
+      margin-top: 20px;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 500;
+      text-align: center;
+    }
+    .msg.success { background: #eaf4ed; color: var(--success); border: 1px solid #b6d9c2; display: block; }
+    .msg.error   { background: #fdeaea; color: var(--error);   border: 1px solid #f5b8b8; display: block; }
+
+    .divider {
+      border: none;
+      border-top: 2px solid var(--parchment-dark);
+      margin: 32px 0;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+      margin-top: 40px;
+    }
+
+    /* ─── Flatpickr overrides ─── */
+    .flatpickr-calendar { font-family: 'Heebo', sans-serif !important; }
+    .flatpickr-input { cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ HEADER ═══════════════════════════════ -->
+<header class="site-header">
+  <img src="Mishmar-Ha-Nahala.png" alt="לוגו משמר הנחלה" />
+  <h1>משמר הנחלה</h1>
+  <p class="subtitle">טופס שיבוץ שמירות — <span id="headerQuarterLabel"></span></p>
+</header>
+
+<div class="page-wrap">
+
+  <!-- ═══════════════════════════════ FAQ ═══════════════════════════════ -->
+  <section class="faq-section">
+    <h2 class="section-title"><span class="icon">❓</span> שאלות נפוצות</h2>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        מתי מתקיימות השמירות?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        השמירות מתקיימות <strong>בכל לילה בין 02:00–05:00</strong>, חוץ ממוצאי שבת.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        כמה פעמים אני משובץ/ת בסבב?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        כל מתנדב משובץ <strong>פעם אחת בלבד</strong> בסבב של שלושה חודשים.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        יש שמירות במוצאי שבת?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        <strong>לא.</strong> אין שמירות במוצאי שבת.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        עד מתי צריך למלא את הטופס?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        יש למלא את הטופס עד <strong id="faqDeadline"></strong>.
+        בקשות שיגיעו לאחר מועד זה לא יוכלו להיות מתחשבות בשיבוץ.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        מה קורה אחרי שמילאתי את הטופס?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        לאחר שליחת הטופס תקבלו <strong>מייל עם פירוט בקשתכם</strong> — כדאי לבדוק ולוודא שהכל נרשם נכון.
+        הבקשות נרשמות אוטומטית בקובץ האילוצים שממנו נאוה משבצת.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        מה קורה אם אני צריך/ה להחליף תאריך שיבוץ?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        לאחר פרסום השיבוץ, <strong>האחריות להחלפת מועד השמירה מוטלת עליכם</strong> —
+        דרך פורום השומרים, בתיאום עם שומר/ת אחר/ת.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        הטופס לא עובד לי — מה עושים?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        אפשר לפנות לנאוה <strong>במייל</strong> עם הפרטים (לא בוואטסאפ 😊).
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        שימו לב — חגים, חול המועד וימי צום
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        אנא שימו לב לתאריכי חגים, חול המועד וימי צום בסבב הנוכחי,
+        וסמנו אותם בהתאם בשדות "לא יכול/ה לשמור".
+        <br/>שומרי שבת — ציינו זאת בהערות ונאוה תתחשב.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        שמרתי במילואים — האם אני צריך/ה לשמור?
+        <span class="faq-arrow">▼</span>
+      </button>
+      <div class="faq-answer">
+        מתנדבים שגויסו למילואים ארוכים בשנתיים האחרונות — <strong>תודה על שרותכם!</strong>
+        נאוה לא שיבצה אתכם בינתיים, אך אם אתם כשירים לחזור ורוצים — אנא מלאו את הטופס.
+        חסרונכם מורגש מאוד.
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════ FORM ═══════════════════════════════ -->
+  <section class="form-section">
+    <h2 class="section-title"><span class="icon">📋</span> טופס שיבוץ</h2>
+    <div class="quarter-badge">סבב: <span id="quarterLabel"></span></div>
+
+    <form id="scheduleForm" novalidate>
+
+      <!-- Personal Details -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">שם פרטי <span class="required">*</span></label>
+          <input type="text" id="firstName" name="firstName" placeholder="שם פרטי" required />
+        </div>
+        <div class="form-group">
+          <label for="lastName">שם משפחה <span class="required">*</span></label>
+          <input type="text" id="lastName" name="lastName" placeholder="שם משפחה" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">כתובת מייל <span class="required">*</span>
+          <span class="hint">לכתובת זו תישלח אישור הבקשה</span>
+        </label>
+        <input type="email" id="email" name="email" placeholder="example@email.com" required />
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Guard Preference -->
+      <div class="form-group">
+        <label>העדפת שמירה עם <span class="required">*</span></label>
+        <div class="radio-group" id="guardPref">
+          <label class="radio-option">
+            <input type="radio" name="guardPref" value="אין העדפה" required />
+            אין העדפה
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="guardPref" value="מעדיפ/ה לשמור רק עם אישה" />
+            מעדיפ/ה לשמור רק עם אישה
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="guardPref" value="מעדיפ/ה לשמור רק עם גבר" />
+            מעדיפ/ה לשמור רק עם גבר
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="guardWith">מבקש/ת לשמור עם (אופציונלי)
+          <span class="hint">אם יש שומר/ת ספציפי/ת שאיתו/ה תרצו לשמור — ציינו שם</span>
+        </label>
+        <input type="text" id="guardWith" name="guardWith" placeholder="שם השומר/ת" />
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Preferred Days -->
+      <div class="form-group">
+        <label>ימים מועדפים לשמירה <span class="required">*</span>
+          <span class="hint">ניתן לסמן מספר ימים</span>
+        </label>
+        <div class="days-grid" id="daysGrid">
+          <label class="day-chip">
+            <input type="checkbox" name="days" value="כל יום" />
+            יכול/ה בכל יום
+          </label>
+          <label class="day-chip">
+            <input type="checkbox" name="days" value="ראשון" />
+            ראשון (לילה ראשון–שני)
+          </label>
+          <label class="day-chip">
+            <input type="checkbox" name="days" value="שני" />
+            שני (לילה שני–שלישי)
+          </label>
+          <label class="day-chip">
+            <input type="checkbox" name="days" value="שלישי" />
+            שלישי (לילה שלישי–רביעי)
+          </label>
+          <label class="day-chip">
+            <input type="checkbox" name="days" value="רביעי" />
+            רביעי (לילה רביעי–חמישי)
+          </label>
+          <label class="day-chip">
+            <input type="checkbox" name="days" value="חמישי" />
+            חמישי (לילה חמישי–שישי)
+          </label>
+          <label class="day-chip">
+            <input type="checkbox" name="days" value="שישי" />
+            שישי (לילה שישי–שבת)
+          </label>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Available Dates -->
+      <div class="form-group">
+        <label style="color: #2e6644; font-size: 1.1rem;">✅ יכול/ה לשמור בתאריכים
+          <span class="hint" style="color: #4a7c59;">סמנו טווחים שבהם אתם <strong>זמינים</strong> לשמור</span>
+        </label>
+        <div class="date-range-section available" id="availableSection">
+          <div class="date-picker-row">
+            <div class="fp-wrap">
+              <label for="availFrom">מתאריך</label>
+              <input type="text" id="availFrom" class="flatpickr-input" placeholder="בחרו תאריך" readonly />
+            </div>
+            <div class="fp-wrap">
+              <label for="availTo">עד תאריך</label>
+              <input type="text" id="availTo" class="flatpickr-input" placeholder="בחרו תאריך" readonly />
+            </div>
+            <button type="button" class="btn-add-range" id="addAvailBtn" style="width:auto; padding: 10px 18px; margin-top:0; border-color: #4a7c59; color: #2e6644;">+ הוסף טווח</button>
+          </div>
+          <div class="date-range-list" id="availableList"></div>
+        </div>
+      </div>
+
+      <!-- Unavailable Dates -->
+      <div class="form-group">
+        <label style="color: #8b2020; font-size: 1.1rem;">❌ לא יכול/ה לשמור בתאריכים
+          <span class="hint" style="color: #a03030;">סמנו טווחים שבהם אתם <strong>לא זמינים</strong> לשמור</span>
+        </label>
+        <div class="date-range-section unavailable" id="unavailableSection">
+          <div class="date-picker-row">
+            <div class="fp-wrap">
+              <label for="unavailFrom">מתאריך</label>
+              <input type="text" id="unavailFrom" class="flatpickr-input" placeholder="בחרו תאריך" readonly />
+            </div>
+            <div class="fp-wrap">
+              <label for="unavailTo">עד תאריך</label>
+              <input type="text" id="unavailTo" class="flatpickr-input" placeholder="בחרו תאריך" readonly />
+            </div>
+            <button type="button" class="btn-add-range" id="addUnavailBtn" style="width:auto; padding: 10px 18px; margin-top:0; border-color: #8b2020; color: #8b2020;">+ הוסף טווח</button>
+          </div>
+          <div class="date-range-list" id="unavailableList"></div>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Notes -->
+      <div class="form-group">
+        <label for="notes">הערות נוספות (אופציונלי)</label>
+        <textarea id="notes" name="notes" placeholder="לדוגמא: שומר/ת שבת, מגבלה רפואית, בקשה מיוחדת..."></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        שליחת טופס השיבוץ ✓
+      </button>
+
+      <div class="msg" id="successMsg">
+        ✅ הטופס נשלח בהצלחה! בדקו את המייל שלכם לאישור.
+      </div>
+      <div class="msg" id="errorMsg">
+        ❌ אירעה שגיאה בשליחה. נסו שוב או פנו לנאוה במייל.
+      </div>
+
+    </form>
+  </section>
+
+</div>
+
+<footer>
+  משמר הנחלה &nbsp;|&nbsp; לשאלות פנו לנאוה במייל
+</footer>
+
+<!-- ═══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/he.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════════════
+   ⚙️  CONFIGURATION — נאוה או ליטל: עדכנו כאן לפני כל רבעון
+   ════════════════════════════════════════════════════════════════ */
+const CONFIG = {
+  quarterLabel:    "מרץ–מאי 2026",        // שם הסבב
+  quarterStart:    "2026-03-01",           // תאריך תחילת הסבב
+  quarterEnd:      "2026-05-31",           // תאריך סיום הסבב
+  deadline:        "מוצ\"ש 14/02/2026",    // מועד אחרון למילוי
+  appsScriptUrl:   "PASTE_YOUR_APPS_SCRIPT_URL_HERE"  // ← הדביקי את ה-URL של Apps Script כאן
+};
+
+/* ════ Apply config labels ════ */
+document.getElementById('quarterLabel').textContent     = CONFIG.quarterLabel;
+document.getElementById('headerQuarterLabel').textContent = CONFIG.quarterLabel;
+document.getElementById('faqDeadline').textContent      = CONFIG.deadline;
+
+/* ════ FAQ accordion ════ */
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+/* ════ Radio / Checkbox visual selection ════ */
+document.querySelectorAll('.radio-option input').forEach(input => {
+  input.addEventListener('change', () => {
+    input.closest('.radio-group').querySelectorAll('.radio-option')
+      .forEach(opt => opt.classList.toggle('selected', opt.querySelector('input').checked));
+  });
+});
+document.querySelectorAll('.day-chip input').forEach(input => {
+  input.addEventListener('change', () => {
+    input.closest('.day-chip').classList.toggle('selected', input.checked);
+    // if "כל יום" selected, uncheck others
+    if (input.value === 'כל יום' && input.checked) {
+      document.querySelectorAll('.day-chip input[value!="כל יום"]').forEach(cb => {
+        cb.checked = false;
+        cb.closest('.day-chip').classList.remove('selected');
+      });
+    } else if (input.value !== 'כל יום' && input.checked) {
+      const allDayInput = document.querySelector('.day-chip input[value="כל יום"]');
+      allDayInput.checked = false;
+      allDayInput.closest('.day-chip').classList.remove('selected');
+    }
+  });
+});
+
+/* ════ Flatpickr setup ════ */
+flatpickr.localize(flatpickr.l10ns.he);
+const fpOptions = {
+  locale: 'he',
+  dateFormat: 'd/m/Y',
+  minDate: CONFIG.quarterStart,
+  maxDate: CONFIG.quarterEnd,
+  allowInput: false
+};
+const availFrom   = flatpickr('#availFrom',   { ...fpOptions });
+const availTo     = flatpickr('#availTo',     { ...fpOptions });
+const unavailFrom = flatpickr('#unavailFrom', { ...fpOptions });
+const unavailTo   = flatpickr('#unavailTo',   { ...fpOptions });
+
+/* ════ Date range lists ════ */
+const availableRanges   = [];
+const unavailableRanges = [];
+
+function renderRanges(listEl, ranges) {
+  listEl.innerHTML = '';
+  ranges.forEach((r, i) => {
+    const div = document.createElement('div');
+    div.className = 'date-range-item';
+    div.innerHTML = `
+      <span class="range-label">📅 ${r.from} – ${r.to}</span>
+      <button type="button" class="remove-range" title="הסר טווח">✕</button>
+    `;
+    div.querySelector('.remove-range').addEventListener('click', () => {
+      ranges.splice(i, 1);
+      renderRanges(listEl, ranges);
+    });
+    listEl.appendChild(div);
+  });
+}
+
+document.getElementById('addAvailBtn').addEventListener('click', () => {
+  const from = availFrom.input.value;
+  const to   = availTo.input.value;
+  if (!from || !to) { alert('נא לבחור תאריך התחלה וסיום'); return; }
+  availableRanges.push({ from, to });
+  renderRanges(document.getElementById('availableList'), availableRanges);
+  availFrom.clear(); availTo.clear();
+});
+
+document.getElementById('addUnavailBtn').addEventListener('click', () => {
+  const from = unavailFrom.input.value;
+  const to   = unavailTo.input.value;
+  if (!from || !to) { alert('נא לבחור תאריך התחלה וסיום'); return; }
+  unavailableRanges.push({ from, to });
+  renderRanges(document.getElementById('unavailableList'), unavailableRanges);
+  unavailFrom.clear(); unavailTo.clear();
+});
+
+/* ════ Form submission ════ */
+document.getElementById('scheduleForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const firstName  = document.getElementById('firstName').value.trim();
+  const lastName   = document.getElementById('lastName').value.trim();
+  const email      = document.getElementById('email').value.trim();
+  const guardPref  = document.querySelector('input[name="guardPref"]:checked')?.value || '';
+  const days       = [...document.querySelectorAll('input[name="days"]:checked')].map(c => c.value);
+
+  // Validation
+  if (!firstName || !lastName || !email || !guardPref || days.length === 0) {
+    alert('נא למלא את כל השדות המסומנים בכוכבית (*)');
+    return;
+  }
+
+  const payload = {
+    quarter:          CONFIG.quarterLabel,
+    firstName,
+    lastName,
+    email,
+    guardPref,
+    guardWith:        document.getElementById('guardWith').value.trim(),
+    preferredDays:    days.join(', '),
+    availableDates:   availableRanges.map(r => `${r.from}–${r.to}`).join(' | '),
+    unavailableDates: unavailableRanges.map(r => `${r.from}–${r.to}`).join(' | '),
+    notes:            document.getElementById('notes').value.trim(),
+    submittedAt:      new Date().toLocaleString('he-IL')
+  };
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'שולח...';
+
+  try {
+    const res = await fetch(CONFIG.appsScriptUrl, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('Server error');
+    document.getElementById('successMsg').style.display = 'block';
+    document.getElementById('errorMsg').style.display   = 'none';
+    document.getElementById('scheduleForm').reset();
+    availableRanges.length = 0; unavailableRanges.length = 0;
+    renderRanges(document.getElementById('availableList'), availableRanges);
+    renderRanges(document.getElementById('unavailableList'), unavailableRanges);
+    document.querySelectorAll('.radio-option, .day-chip').forEach(el => el.classList.remove('selected'));
+    btn.textContent = '✓ נשלח בהצלחה!';
+  } catch {
+    document.getElementById('errorMsg').style.display   = 'block';
+    document.getElementById('successMsg').style.display = 'none';
+    btn.disabled = false;
+    btn.textContent = 'שליחת טופס השיבוץ ✓';
+  }
+});
+</script>
+</body>
+</html>
