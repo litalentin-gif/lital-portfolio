@@ -341,6 +341,26 @@
       white-space: nowrap;
     }
 
+    .project-badge.launched {
+      background: rgba(63, 185, 80, 0.1);
+      border-color: rgba(63, 185, 80, 0.3);
+      color: #3FB950;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      color: var(--blue);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: gap 0.2s, color 0.2s;
+    }
+
+    .project-link:hover { gap: 10px; color: var(--purple); }
+
     .project-desc {
       font-size: 15px;
       color: var(--muted);
@@ -692,7 +712,7 @@
       <div class="project-card">
         <div class="project-header">
           <h3 class="project-title">TypoSwitch - Chrome Extension</h3>
-          <span class="project-badge">In Progress</span>
+          <span class="project-badge launched">Launched</span>
         </div>
         <p class="project-desc">
           A productivity Chrome Extension that solves a real-world problem for bilingual users - instantly fixing mistyped text between Hebrew and English keyboard layouts. Built end-to-end with multiple UX entry points: keyboard shortcut (Ctrl+Shift+Y), popup interface, and right-click context menu. Features smart detection logic, real-time toast notifications, and a settings page for user preferences - all with zero friction.
@@ -706,6 +726,7 @@
           <span class="tech-tag">Messaging API</span>
           <span class="tech-tag">Commands API</span>
         </div>
+        <a href="https://chromewebstore.google.com/detail/typoswitch/lifgfpmbfjbpefijhdnhpjminnldeane" target="_blank" rel="noopener" class="project-link">View on Chrome Web Store →</a>
       </div>
 
     </div>
